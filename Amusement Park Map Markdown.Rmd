@@ -1,0 +1,50 @@
+---
+title: "Amusement Park Map"
+author: "Joe Lindenmayer"
+date: "February 17, 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(leaflet)
+```
+
+This is an interactive map showing the location of nine amusement parks in Orlando Florida. Each park has a unique icon, and when clicked the pop-up will display the price of admission as well as a hyperlink to the park's website. 
+
+```{r}
+amusement_park_icons <- icons(iconUrl = c("https://img.icons8.com/color/96/000000/genie.png","https://img.icons8.com/color/96/000000/animation.png","https://img.icons8.com/color/96/000000/baby-yoda.png","https://img.icons8.com/color/96/000000/avatar.png","https://img.icons8.com/color/96/000000/mermaid.png","https://img.icons8.com/color/96/000000/transformer.png","https://img.icons8.com/color/96/000000/hulk.png","https://img.icons8.com/color/96/000000/harry-potter.png","https://img.icons8.com/color/96/000000/orca.png"))
+
+```
+
+Here is the database of information used in the map.
+
+```{r}
+amusement_parks <- data.frame(name=c("Magic Kingdom","Epcot", "Hollywood Studios", "Animal Kingdom","Disney Springs","Universal Studios", "Islands of Adventure", "The Wizarding World of Harry Potter","Seaworld"),
+                        price=c(105, 97, 97, 97, 63, 109, 109, 164, 109),
+                        lat=c(28.4177, 28.3747, 28.3575, 28.3529, 28.3710, 28.4752, 28.4718, 28.4796, 28.4097),
+                        long=c(-81.5812, -81.5494, -81.5583, -81.5907, -81.5191, -81.4670, -81.4710, -81.4694, -81.4597),
+                        parkSites=c("<a href= 'https://disneyworld.disney.go.com/destinations/magic-kingdom/'>Magic Kingdom</a>",
+                                       "<a href= 'https://disneyworld.disney.go.com/destinations/epcot/'>Epcot</a>",
+                                       "<a href= 'https://disneyworld.disney.go.com/destinations/hollywood-studios/'>Hollywood Studios</a>",
+                                       "<a href= 'https://disneyworld.disney.go.com/destinations/animal-kingdom/'>Animal Kingdom</a>",
+                                       "<a href= 'https://www.disneysprings.com/'>Disney Springs</a>",
+                                       "<a href= 'https://www.universalorlando.com/web/en/us/theme-parks/universal-studios-florida?gclid=Cj0KCQiA962BBhCzARIsAIpWEL2XMZWDjAzMwPP5l64flby_cQ69mrT5_7QLnsaS9P7aiHU06nKXfisaAg6LEALw_wcB&gclsrc=aw.ds'>Universal Studios</a>",
+                                       "<a href= 'https://www.universalorlando.com/web/en/us/theme-parks/islands-of-adventure?gclid=Cj0KCQiA962BBhCzARIsAIpWEL1sX9FTWI9ijsmmX4mk3kfz8wWs7et8_v_UeDJYqbjxfyozAM-1WBgaAi16EALw_wcB&gclsrc=aw.ds'>Islands of Adventure</a>",
+                                       "<a href= 'https://www.wizardingworld.com/'>The Wizarding World of Harry Potter</a>",
+                                       "<a href= 'https://seaworld.com/orlando/tickets/?utm_source=google&utm_id=go_cmp-9544131998_adg-95930171017_ad-489696676255_aud-442024168006:kwd-116620679_dev-c_ext-&gclid=Cj0KCQiA962BBhCzARIsAIpWEL3MrG3K9ASBN5XZkJ6c1beHpPQvzBk1agaUIMf7gkyGgesATbXIZVcaAurWEALw_wcB'>Seaworld</a>"))
+
+```
+
+The unique icons do not display in R, but they can be seen when the webpage is opened separately. 
+
+```{r}
+amusement_parks %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng = amusement_parks$long, lat = amusement_parks$lat, icon = amusement_park_icons,
+             popup = paste("Park Website:", amusement_parks$parkSites, "<br>",
+                           "Price:", amusement_parks$price))
+```
+
